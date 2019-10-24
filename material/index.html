@@ -156,40 +156,44 @@
     }
   </style> -->
   <script>
-    AFRAME.registerComponent('showbutton', {
-      schema: {
-        'target': { type: 'selector' },
-      },
+    AFRAME.registerComponent('arinteraction', {
       init: function () {
-        var show = false;
-        this.el.addEventListener("click", function () {
-          console.log('markerFound');
-          /*         this.el.addEventListener("click", () => {
-                    if (show) {
-                      this.data.target.setAttribute("visible", "false");
-                      this.el.querySelector("a").innerHTML = "Show Box";
-                    } else {
-                      this.data.target.setAttribute("visible", "true");
-                      this.el.querySelector("a").innerHTML = "Hide Box";
-                    }
-                    show = !show; */
+        var delay = 2000;
+        var timer;
+        document.querySelector('#clickme').addEventListener('mouseover', function (e) {
+          timer = setTimeout(function () {
+            window.open("../index.html", "_self");
+          }, delay);
         });
-      }
-    });
+        document.querySelector('#clickme').addEventListener('mouseout',     function () {
+            clearTimeout(timer);
+          });
+        document.querySelector('#showbutton').addEventListener('mouseover',
+        function(e) {
+          console.log('markerFound');
+        })
+        }
+      });
+
+
   </script>
 </head>
 
 <body>
-  <a-scene embedded
+  <a-scene arinteraction embedded
     arjs='sourceType: webcam; debugUIEnabled: true; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
+
     <a-entity id="cameraRig">
       <a-camera id="camera">
+        <!-- <a-entity camera="userHeight: 1.6" look-controls> -->
+        <a-cursor></a-cursor>
+        <!-- </a-entity> -->
       </a-camera>
       <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .screen"></a-entity>
       <a-entity laser-controls raycaster="objects: .screen;"></a-entity>
     </a-entity>
 
-    <a-entity id="main" class="screen dark main" htmlembed="ppu:256" position="0 2.5 -5">
+    <a-entity id="main" class="w3-card-4 w3-dark-grey" htmlembed="ppu:256" position="0 2.5 -5">
       <div id="page1">
         <h1>A-Frame HTML Embed Component</h1>
         <p>HTML Embed is a component created for A-Frame. The HTML Embed component allows for arbitrary html to be
@@ -220,9 +224,16 @@
           });
         </div>
 
-        <a-entity showbutton="target:#box"><a class="w3-button w3-black" href="javascript:void(0)">Show Box</a></a-entity>
+        <a-entity id = 'showbutton'><a class="w3-button w3-black" href="javascript:void(0)">Show Box</a>
+        </a-entity>
+        <a-entity homebutton="target:#box"><a class="w3-button w3-black" href="javascript:void(0)">Get Back</a>
+        </a-entity>
+        <a-entity>
+          <div id="clickme" onclick="console.log('do something')" class="w3-button w3-black">Back to Index</div>
+        </a-entity>
 
-        <a href="../index.html" class="w3-button w3-black ">Leave this</a>
+
+
       </div>
 
     </a-entity>
