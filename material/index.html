@@ -165,15 +165,15 @@
             window.open("../index.html", "_self");
           }, delay);
         });
-        document.querySelector('#clickme').addEventListener('mouseout',     function () {
-            clearTimeout(timer);
-          });
+        document.querySelector('#clickme').addEventListener('mouseout', function () {
+          clearTimeout(timer);
+        });
         document.querySelector('#showbutton').addEventListener('mouseover',
-        function(e) {
-          console.log('markerFound');
-        })
-        }
-      });
+          function (e) {
+            console.log('markerFound');
+          })
+      }
+    });
 
 
   </script>
@@ -184,16 +184,21 @@
     arjs='sourceType: webcam; debugUIEnabled: true; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
 
     <a-entity id="cameraRig">
-      <a-camera id="camera">
-        <!-- <a-entity camera="userHeight: 1.6" look-controls> -->
+      <!-- <a-camera id="camera"> -->
+      <a-entity camera="userHeight: 1.6" look-controls>
         <a-cursor></a-cursor>
         <!-- </a-entity> -->
-      </a-camera>
-      <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .screen"></a-entity>
-      <a-entity laser-controls raycaster="objects: .screen;"></a-entity>
+        <a-entity geometry="primitive: plane; height: 0.2; width: 0.2" position="0 -0.2 -1"
+          material="color: gray; opacity: 0.5">
+        </a-entity>
+        <!-- </a-camera> -->
+        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .screen"></a-entity>
+        <a-entity laser-controls raycaster="objects: .screen;"></a-entity>
+      </a-entity>
     </a-entity>
 
-    <a-entity id="main" class="w3-card-4 w3-dark-grey" htmlembed="ppu:256" position="0 2.5 -5">
+    <!-- Scene Starts -->
+    <a-entity id="main" class="w3-card-4 w3-dark-grey" htmlembed="ppu:256" position="0 0 -5">
       <div id="page1">
         <h1>A-Frame HTML Embed Component</h1>
         <p>HTML Embed is a component created for A-Frame. The HTML Embed component allows for arbitrary html to be
@@ -224,7 +229,7 @@
           });
         </div>
 
-        <a-entity id = 'showbutton'><a class="w3-button w3-black" href="javascript:void(0)">Show Box</a>
+        <a-entity id='showbutton'><a class="w3-button w3-black" href="javascript:void(0)">Show Box</a>
         </a-entity>
         <a-entity homebutton="target:#box"><a class="w3-button w3-black" href="javascript:void(0)">Get Back</a>
         </a-entity>
