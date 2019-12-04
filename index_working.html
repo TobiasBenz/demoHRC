@@ -1,0 +1,81 @@
+<!-- TO DO -->
+<!-- Position to walk to does not work prob. stringify problem -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAR Animation Experiment</title>
+    <script src="https://aframe.io/releases/0.9.1/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.0.1/dist/aframe-extras.min.js"></script>
+    <script src="https://rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://raw.githubusercontent.com/jeromeetienne/AR.js/master/three.js/build/ar.min.js"></script>
+    <script type="text/javascript">
+        AFRAME.registerComponent('shadow-material', {
+            init() {
+                this.material = new THREE.ShadowMaterial();
+                this.el.getOrCreateObject3D('mesh').material = this.material;
+                this.material.opacity = 0.3;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene ar>
+        <a-camera ar-raycaster raycaster cursor="fuse:false"> </a-camera>
+        <a-ring id="cursor" radius-inner="0.1" radius-outer="0.2" color="teal" position="0 1.25 -5" rotation="-90 0 0">
+        </a-ring>
+        <a-assets>
+            <a-asset id="cesium-man"
+                src="https://cdn.rawgit.com/KhronosGroup/glTF-Sample-Models/29355d23/2.0/CesiumMan/glTF-Binary/CesiumMan.glb">
+            </a-asset>
+        </a-assets>
+
+        <a-entity id="walker">
+            <a-entity gltf-model="#cesium-man" rotation="0 -90 0" scale="0.5 0.5 0.5" animation-mixer
+                shadow="cast: true">
+            </a-entity>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    </a-scene>
+
+    <script type="text/javascript">
+        function onSceneLoaded() {
+            const raycaster = document.querySelector('[ar-raycaster]');
+            const cursor = document.querySelector('#cursor');
+            let target;
+            raycaster.addEventListener('raycaster-intersection', (event) => {
+                target = event.detail.intersections[0].point;
+                cursor.setAttribute('position', target);
+            });
+            const walker = document.querySelector('#walker');
+            const { stringify } = AFRAME.utils.coordinates;
+            let firstTime = true;
+            raycaster.addEventListener('click', () => {
+                if (firstTime) {
+                    walker.setAttribute('position', target);
+                    firstTime = false;
+                } else {
+                    const currentPosition = walker.object3D.position;
+                    const distance = currentPosition.distanceTo(target);
+
+                    walker.object3D.lookAt(target);
+
+                    const animation = document.createElement('a-animation');
+                    animation.setAttribute('attribute', 'position');
+                    animation.setAttribute('to', stringify(target));
+                    animation.setAttribute('dur', distance * 7000);
+                    animation.setAttribute('easing', 'linear');
+                    walker.appendChild(animation);
+                }
+            });
+
+        }
+        const scene = document.querySelector('a-scene');
+        scene.addEventListener('loaded', onSceneLoaded);
+
+    </script>
+</body>
+
+</html>
